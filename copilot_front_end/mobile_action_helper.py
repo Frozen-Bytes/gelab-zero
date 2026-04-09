@@ -6,7 +6,7 @@ from uuid import uuid4
 
 if "." not in sys.path:
     sys.path.append(".")
-from copilot_front_end.package_map import find_package_name
+from copilot_front_end.package_map import find_package_name, find_package_name_dynamic
 
 import time
 from tqdm import tqdm
@@ -53,7 +53,8 @@ def close_app_on_device(device_id, app_name, print_command = False):
     """
     adb_command = _get_adb_command(device_id)
     
-    package_name = find_package_name(app_name)
+    package_name = find_package_name_dynamic(app_name, device_id)
+    # package_name = find_package_name(app_name)
     if package_name is None:
         raise ValueError(f"App {app_name} not found in package map.")
     
@@ -530,8 +531,11 @@ def act_on_device(device_id, action, print_command = False, refush_app = True, d
         # print(f"Executing command: {adb_command}")
     elif action['action_type'] == "Awake":
         app_name = action['args']['text']
-
-        package_name = find_package_name(app_name)
+        
+        print(f"look at this {action}")
+        
+        package_name = find_package_name_dynamic(app_name, device_id)
+        # package_name = find_package_name(app_name)
         
         if package_name is None:
             raise ValueError(f"App {app_name} not found in package map.")
@@ -545,7 +549,6 @@ def act_on_device(device_id, action, print_command = False, refush_app = True, d
 
         # else:
         adb_command = f"{adb_command} shell monkey -p {package_name} -c android.intent.category.LAUNCHER 1"
-        time.sleep(2)
 
         # adb_command += f" shell monkey -p {package_name} -c android.intent.category.LAUNCHER 1"
 
@@ -613,6 +616,7 @@ def act_on_device(device_id, action, print_command = False, refush_app = True, d
         print(f"Executing command: {adb_command}")
 
     result = subprocess.run(adb_command, shell=True, capture_output=True, text=True)
+    time.sleep(2)
 
     if print_command:
         print(f"Command output: {result.stdout}")

@@ -1,4 +1,5 @@
 import difflib
+import subprocess
 
 package_name_map = {
     "天气": "com.coloros.weather2",
@@ -212,7 +213,42 @@ package_name_map = {
     "企查查": "com.android.icredit",
 }
 
-import difflib 
+def get_installed_packages(adb_serial):
+    """Fetch all package names currently installed on the device."""
+    cmd = f"adb -s {adb_serial} shell pm list packages"
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if result.returncode != 0:
+        return []
+    
+    # Converts 'package:com.whatsapp' into 'com.whatsapp'
+    packages = [line.split(':')[-1].strip() for line in result.stdout.splitlines() if line]
+    return packages
+
+def find_package_name_dynamic(app_name, adb_serial):
+    app_name_lowered = app_name.lower()
+    
+    print(f"app name is {app_name}")
+    # 1. Try the hardcoded map first (best for Chinese apps with weird package names)
+    if app_name_lowered in package_name_map:
+        print("it went here tho")
+        return package_name_map[app_name_lowered]
+    
+    # 2. Get live list from device
+    installed_packages = get_installed_packages(adb_serial)
+    print(installed_packages)
+    # 3. Fuzzy match against the live list
+    # We use a threshold (cutoff) to stop it from picking 'org.tasks' for 'WhatsApp'
+    matches = difflib.get_close_matches(app_name_lowered, installed_packages, n=1, cutoff=0.5)
+    
+    if matches:
+        return matches[0]
+    
+    # 4. Final fallback: Substring search (e.g., if 'whatsapp' is in 'com.whatsapp.bin')
+    for pkg in installed_packages:
+        if app_name_lowered in pkg.lower():
+            return pkg
+            
+    return None
 
 def find_package_name(app_name):
     app_name_lowered = app_name.lower()

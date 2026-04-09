@@ -13,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 # add parent directory to sys.path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from copilot_front_end.package_map import find_package_name
+from copilot_front_end.package_map import find_package_name, find_package_name_dynamic
 
 
 def parser0729_to_frontend_action(parser_action):
@@ -306,7 +306,7 @@ def act_on_device(frontend_action, device_id, wm_size, print_command = False, re
         def preprocess_text_for_adb(text):
             # Escape special characters for adb shell input
             text = text.replace("\n", " ").replace("\t", " ")
-            text = text.replace(" ", "\\ ")
+            # text = text.replace(" ", "\\ ")
             return text
 
 
@@ -352,7 +352,8 @@ def act_on_device(frontend_action, device_id, wm_size, print_command = False, re
     elif action_type == "AWAKE":
         assert "value" in frontend_action, "Missing value in AWAKE action"
         app_name = frontend_action["value"]
-        package_name = find_package_name(app_name)
+        package_name = find_package_name_dynamic(app_name, device_id)
+        # package_name = find_package_name(app_name)
         if package_name is None:
             raise ValueError(f"App name {app_name} not found in package map.")
         
