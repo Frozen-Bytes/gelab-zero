@@ -235,7 +235,7 @@ def find_package_name_dynamic(app_name, adb_serial):
     
     # 2. Get live list from device
     installed_packages = get_installed_packages(adb_serial)
-    print(installed_packages)
+    # print(installed_packages)
     # 3. Fuzzy match against the live list
     # We use a threshold (cutoff) to stop it from picking 'org.tasks' for 'WhatsApp'
     matches = difflib.get_close_matches(app_name_lowered, installed_packages, n=1, cutoff=0.5)
