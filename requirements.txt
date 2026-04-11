@@ -17,3 +17,9 @@ tqdm
 requests
 
 fastmcp
+
+google-generativeai
+groq
+json-repair
+
+python-dotenv
