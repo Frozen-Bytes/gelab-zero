@@ -1,7 +1,6 @@
 import os
 from models.providers.gemini_client import GeminiClient
 from models.providers.openai_client import OpenAIClient
-from models.providers.qwen_client import QwenClient
 
 from dotenv import load_dotenv
 
