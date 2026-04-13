@@ -4,6 +4,7 @@ This module handles APK decoding and optional device interaction.
 """
 
 import os
+import sys
 import shutil
 import subprocess
 import tempfile
@@ -60,7 +61,7 @@ def decode_apk(apk_path: str, output_dir: str) -> str:
         ["apktool", "d", apk_path, "-o", output_dir, "--force"],
         capture_output=True,
         text=True,
-        shell=True,
+        shell=(sys.platform == "win32"),
     )
 
     if result.returncode != 0:

@@ -9,3 +9,5 @@ gelab-zero-4b-preview/
 
 model_config.yaml.env
 **/.env
+
+*.log
