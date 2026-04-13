@@ -35,6 +35,7 @@ def main() -> int:
     parser.add_argument("apk_path", help="Path to the APK file")
     parser.add_argument("--output_dir", default=None, help="Output directory for decoded APK")
     parser.add_argument("--skip_execution", action="store_true", help="Skip scenario execution on device")
+    parser.add_argument("--num_goals", type=int, default=3, help="Number of test scenarios to generate (default: 3)")
 
     args = parser.parse_args()
 
@@ -88,7 +89,7 @@ def main() -> int:
             generator = ScenarioGenerator(llm_client=client)
             
             logger.info("Generating test scenarios...")
-            scenarios = generator.generate_scenarios(summary)
+            scenarios = generator.generate_scenarios(summary, num_goals=args.num_goals)
             
             print("\n=== Generated Test Scenarios ===")
             if scenarios:

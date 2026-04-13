@@ -1,0 +1,3 @@
+2026-04-13 13:07:34,974 - apk_utils - INFO - Directory 'C:\Users\lap\AppData\Local\Temp\apk_decode_975gv9gk' exists but is incomplete. Removing and re-decoding.
+2026-04-13 13:07:34,974 - apk_utils - INFO - Decoding APK: nia.apk ... this may take few minutes, if nothing happen try pressing on the keyboard
+2026-04-13 13:08:08,189 - apk_utils - INFO - Decoded successfully to: C:\Users\lap\AppData\Local\Temp\apk_decode_975gv9gk

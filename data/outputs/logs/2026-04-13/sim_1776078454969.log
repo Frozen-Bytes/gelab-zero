@@ -1,0 +1,6 @@
+2026-04-13 13:07:34,973 - apk_test_agent - INFO - Using decode output folder: C:\Users\lap\AppData\Local\Temp\apk_decode_975gv9gk
+2026-04-13 13:08:08,189 - apk_test_agent - INFO - APK decoded to: C:\Users\lap\AppData\Local\Temp\apk_decode_975gv9gk
+2026-04-13 13:08:08,421 - apk_test_agent - INFO - Feature extraction completed.
+2026-04-13 13:08:08,421 - apk_test_agent - INFO - Feature summarization completed.
+2026-04-13 13:08:08,422 - apk_test_agent - INFO - Initializing scenario generator...
+2026-04-13 13:08:08,422 - apk_test_agent - INFO - Generating test scenarios...
