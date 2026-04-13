@@ -27,19 +27,6 @@ def get_llm_client(llm_config: dict):
             raise ValueError('OPENAI_API_KEY not found in .env')
         
         return OpenAIClient(api_key=api_key, model_name=model_name)
-    
-    elif provider == 'qwen':  # ← Add this branch
-        api_key = os.getenv('DASHSCOPE_API_KEY')
-        if not api_key:
-            raise ValueError('DASHSCOPE_API_KEY not found in .env')
-        
-        # Optional: get region from config, default to singapore
-        region = llm_config.get('region', 'singapore')
-        return QwenClient(
-            api_key=api_key, 
-            model_name=model_name,
-            region=region
-        )
-        
+           
     else:
         raise ValueError(f'Unsupported LLM provider: {provider}')
