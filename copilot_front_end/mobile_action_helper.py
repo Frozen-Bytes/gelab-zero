@@ -531,6 +531,10 @@ def act_on_device(device_id, action, print_command = False, refush_app = True, d
         # print(f"Executing command: {adb_command}")
     elif action['action_type'] == "Awake":
         app_name = action['args']['text']
+        app_name1 = action['args']['value']
+        print("which one ??:")
+        print(app_name)
+        print(app_name1)
         
         print(f"look at this {action}")
         

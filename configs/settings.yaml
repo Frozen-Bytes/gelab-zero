@@ -1,0 +1,4 @@
+# Scenario generation configuration
+scenario_gen:
+  provider: "gemini"
+  model_name: "gemini-2.5-flash"
