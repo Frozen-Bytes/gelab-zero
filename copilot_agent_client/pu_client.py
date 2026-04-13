@@ -201,6 +201,49 @@ def evaluate_task_on_device(agent_server, device_info, task, rollout_config, ext
 
     print(f"Task {task} done in {len(history_actions)} steps. Session ID: {session_id}")
 
+    # --- Save actions-only JSON log ---
+    _save_actions_json(session_id, task, history_actions, stop_reason)
+
     return return_log
+
+
+def _clean_action(action, step_index):
+    """Strip an action down to only its execution-relevant fields (no thinking/explanation)."""
+    # Fields that are NOT part of the actual action
+    _noise_fields = {"cot", "explain", "summary", "model_response", "asked_messages",
+                     "llm_cost", "search_type", "keyboard_exists"}
+
+    clean = {"step": step_index + 1, "action_type": action.get("action_type", action.get("action", "UNKNOWN"))}
+
+    for key, value in action.items():
+        if key in _noise_fields:
+            continue
+        if key in ("action_type", "action"):
+            continue  # already added
+        clean[key] = value
+
+    return clean
+
+
+def _save_actions_json(session_id, task, history_actions, stop_reason):
+    """Write a clean JSON file containing only the executed actions."""
+    action_log_dir = os.path.join("running_log", "action_logs")
+    os.makedirs(action_log_dir, exist_ok=True)
+
+    clean_actions = [_clean_action(a, i) for i, a in enumerate(history_actions)]
+
+    output = {
+        "session_id": session_id,
+        "task": task,
+        "total_steps": len(clean_actions),
+        "stop_reason": stop_reason,
+        "actions": clean_actions,
+    }
+
+    output_path = os.path.join(action_log_dir, f"{session_id}_actions.json")
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
+
+    print(f"Actions JSON saved to: {output_path}")
 
 
