@@ -94,7 +94,7 @@ def main() -> int:
             print("\n=== Generated Test Scenarios ===")
             if scenarios:
                 for i, scenario in enumerate(scenarios, 1):
-                    print(f"{i}. {scenario}")
+                    print(f"{i}. [{scenario['task_name']}] {scenario['task_description']}")
             else:
                 print("No scenarios generated.")
             print("================================\n")
@@ -159,13 +159,15 @@ def main() -> int:
             print(f"Executing {len(scenarios)} scenarios on device: {device_id}")
             for i, scenario in enumerate(scenarios, 1):
                 # Add package name at the start of every scenario
-                task_with_package = f"{package_name}: {scenario}"
+                task_name = scenario['task_name']
+                task_description = scenario['task_description']
+                task_with_package = f"{package_name}: {task_description}"
                 print(f"\n{'='*50}")
                 print(f"Executing Scenario {i}/{len(scenarios)}: {task_with_package}")
                 print(f"{'='*50}")
 
                 try:
-                    evaluate_task_on_device(l2_server, device_info, task_with_package, tmp_rollout_config, reflush_app=True)
+                    evaluate_task_on_device(l2_server, device_info, task_with_package, tmp_rollout_config, extra_info={"file_name":task_name} ,reflush_app=True)
                     print(f"Scenario {i} completed successfully.")
                 except Exception as e:
                     print(f"Error executing scenario {i} '{task_with_package}': {e}")

@@ -13,18 +13,41 @@ Rules:
 - Goals should be diverse - cover different features of the app
 - Do NOT repeat similar goals
 - Do NOT include specific private data (e.g. "login with password abc123")
-- Output ONLY a numbered list, nothing else. No explanation, no preamble.
+- task_name must be CamelCase, concise, and suitable for use as a test file name (e.g. "RecordAudioClip", "ToggleDarkMode")
+- Output ONLY a valid JSON array, nothing else. No explanation, no preamble, no markdown backticks.
 
-Example output format:
-1. Open the list view and scroll through all available items 
-2. Open the settings and toggle Dark Mode on
-3. Search for 'Privacy' in the search bar
-4. View the current version number in the About section"""
+Output format:
+[
+  {
+    "task_name": "ShortCamelCaseName",
+    "task_description": "Actionable goal sentence starting with a verb."
+  }
+]
+
+Example output:
+[
+  {
+    "task_name": "ScrollItemListView",
+    "task_description": "Open the list view and scroll through all available items."
+  },
+  {
+    "task_name": "ToggleDarkMode",
+    "task_description": "Open the settings and toggle Dark Mode on."
+  },
+  {
+    "task_name": "SearchPrivacySettings",
+    "task_description": "Search for 'Privacy' in the search bar."
+  },
+  {
+    "task_name": "ViewAppVersion",
+    "task_description": "View the current version number in the About section."
+  }
+]"""
 
 
 def build_goal_prompt(app_summary: str, num_goals: int = 3) -> str:
     """
-    Constructs the final prompt string sent to the LLM (Qwen).
+    Constructs the final prompt string sent to the LLM.
     
     Args:
         app_summary (str): The condensed text containing features/permissions 
@@ -35,7 +58,7 @@ def build_goal_prompt(app_summary: str, num_goals: int = 3) -> str:
         str: A fully formatted instruction block ready for Qwen API.
     """
     # Clamp input to reasonable bounds to save tokens and ensure quality
-    safe_num_goals = max(2, min(10, num_goals))
+    safe_num_goals = num_goals
     
     return f"""{SYSTEM_PROMPT}
 

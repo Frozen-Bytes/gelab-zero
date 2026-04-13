@@ -202,7 +202,7 @@ def evaluate_task_on_device(agent_server, device_info, task, rollout_config, ext
     print(f"Task {task} done in {len(history_actions)} steps. Session ID: {session_id}")
 
     # --- Save actions-only JSON log ---
-    _save_actions_json(session_id, task, history_actions, stop_reason)
+    _save_actions_json(session_id, task, history_actions, stop_reason, file_name=extra_info.get("file_name"))
 
     return return_log
 
@@ -225,7 +225,7 @@ def _clean_action(action, step_index):
     return clean
 
 
-def _save_actions_json(session_id, task, history_actions, stop_reason):
+def _save_actions_json(session_id, task, history_actions, stop_reason, file_name):
     """Write a clean JSON file containing only the executed actions."""
     action_log_dir = os.path.join("running_log", "action_logs")
     os.makedirs(action_log_dir, exist_ok=True)
@@ -239,8 +239,11 @@ def _save_actions_json(session_id, task, history_actions, stop_reason):
         "stop_reason": stop_reason,
         "actions": clean_actions,
     }
-
-    output_path = os.path.join(action_log_dir, f"{session_id}_actions.json")
+    if file_name:
+        output_path = os.path.join(action_log_dir, f"{file_name}.json")
+    else: 
+        output_path = os.path.join(action_log_dir, f"{session_id}_actions.json")
+    
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, ensure_ascii=False)
 
