@@ -167,7 +167,7 @@ def main() -> int:
                 print(f"{'='*50}")
 
                 try:
-                    evaluate_task_on_device(l2_server, device_info, task_with_package, tmp_rollout_config, extra_info={"file_name":task_name} ,reflush_app=True)
+                    evaluate_task_on_device(l2_server, device_info, task_with_package, tmp_rollout_config, extra_info={"file_name":task_name, "package_name": package_name} ,reflush_app=True)
                     print(f"Scenario {i} completed successfully.")
                 except Exception as e:
                     print(f"Error executing scenario {i} '{task_with_package}': {e}")

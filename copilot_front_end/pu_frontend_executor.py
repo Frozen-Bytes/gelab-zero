@@ -222,7 +222,7 @@ def _detect_screen_orientation(device_id):
     return result
 
 
-def act_on_device(frontend_action, device_id, wm_size, print_command = False, reflush_app = True):
+def act_on_device(frontend_action, device_id, wm_size, print_command = False, reflush_app = True, app_package = None):
     """
     Execute the frontend action on the device.
     1. # CLICK(point=(x,y))
@@ -352,10 +352,15 @@ def act_on_device(frontend_action, device_id, wm_size, print_command = False, re
     elif action_type == "AWAKE":
         assert "value" in frontend_action, "Missing value in AWAKE action"
         app_name = frontend_action["value"]
-        package_name = find_package_name_dynamic(app_name, device_id)
-        # package_name = find_package_name(app_name)
-        if package_name is None:
-            raise ValueError(f"App name {app_name} not found in package map.")
+        # Priority: 1) app_package from APK parser, 2) value looks like package, 3) fuzzy match
+        if app_package:
+            package_name = app_package
+        elif "." in app_name and " " not in app_name:
+            package_name = app_name
+        else:
+            package_name = find_package_name_dynamic(app_name, device_id)
+            if package_name is None:
+                raise ValueError(f"App name {app_name} not found in package map.")
         
         if reflush_app:
             cmd = f"adb -s {device_id} shell am force-stop {package_name}"

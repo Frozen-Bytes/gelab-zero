@@ -174,7 +174,10 @@ def evaluate_task_on_device(agent_server, device_info, task, rollout_config, ext
         #TODO: to replace with the new function
         action = uiTars_to_frontend_action(action)
 
-        act_on_device(action, device_id, device_wm_size, print_command=True, reflush_app=reflush_app)
+        # Pass the real package name from APK analysis (if available) so AWAKE
+        # uses it directly instead of relying on fuzzy matching.
+        app_package = extra_info.get("package_name")
+        act_on_device(action, device_id, device_wm_size, print_command=True, reflush_app=reflush_app, app_package=app_package)
 
         history_actions.append(action)
 

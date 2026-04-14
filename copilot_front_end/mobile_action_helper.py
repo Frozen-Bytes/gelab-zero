@@ -512,7 +512,7 @@ def normlize_point(point, wm_size):
     return real_world_point
 
 
-def act_on_device(device_id, action, print_command = False, refush_app = True, device_wm_size = None):
+def act_on_device(device_id, action, print_command = False, refush_app = True, device_wm_size = None, app_package = None):
     """
     Perform an action on a specific device.
     """
@@ -538,8 +538,13 @@ def act_on_device(device_id, action, print_command = False, refush_app = True, d
         
         print(f"look at this {action}")
         
-        package_name = find_package_name_dynamic(app_name, device_id)
-        # package_name = find_package_name(app_name)
+        # Priority: 1) app_package from APK parser, 2) value looks like package, 3) fuzzy match
+        if app_package:
+            package_name = app_package
+        elif "." in app_name and " " not in app_name:
+            package_name = app_name
+        else:
+            package_name = find_package_name_dynamic(app_name, device_id)
         
         if package_name is None:
             raise ValueError(f"App {app_name} not found in package map.")
