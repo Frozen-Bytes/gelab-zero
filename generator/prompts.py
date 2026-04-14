@@ -12,6 +12,8 @@ Rules:
 - Goals should reflect what a real user would actually want to do in this app
 - Goals should be diverse - cover different features of the app
 - Do NOT repeat similar goals
+- Each `task_description` must be a **multi-step user journey** (2–4 actions), not a single tap
+- Chain actions using ", then" to show sequence: "Open X, then tap Y, then verify Z"
 - Do NOT include specific private data (e.g. "login with password abc123")
 - task_name must be CamelCase, concise, and suitable for use as a test file name (e.g. "RecordAudioClip", "ToggleDarkMode")
 - Output ONLY a valid JSON array, nothing else. No explanation, no preamble, no markdown backticks.

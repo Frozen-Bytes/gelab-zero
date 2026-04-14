@@ -31,22 +31,32 @@ def extract_apk_features(apk_dir: str) -> dict:
     
     manifest = parse_manifest(apk_dir)
     strings = parse_strings(apk_dir)
-    smali = parse_smali(apk_dir)
+    
+    # Pass app package to smali parser so it doesn't accidentally skip app code
+    app_package = manifest.get("package", "")
+    smali = parse_smali(apk_dir, app_package=app_package)
 
     features = {
-        "package": manifest.get("package", ""),
+        "package": app_package,
         "activities": manifest.get("activities", []),
         "permissions": manifest.get("permissions", []),
         "intent_actions": manifest.get("intent_actions", []),
         "ui_strings": strings,
         "classes": smali.get("classes", []),
         "methods": smali.get("methods", []),
+        "navigation_routes": smali.get("navigation_routes", []),
+        "content_descriptions": smali.get("content_descriptions", []),
     }
     
-    # NEW: Log specific findings so you see them in the console
+    # Log specific findings so you see them in the console
     logger.info(f"Extraction complete for: {features['package']}")
     logger.info(f"Activities found: {len(features['activities'])} {features['activities']}")
     logger.info(f"UI Labels found: {len(features['ui_strings'])}")
-    logger.info(f"Methods found: {len(features['methods'])} {features['methods']}")
+    logger.info(f"Classes found: {len(features['classes'])}")
+    logger.info(f"Methods found: {len(features['methods'])}")
+    if features['navigation_routes']:
+        logger.info(f"Navigation routes found: {len(features['navigation_routes'])} {features['navigation_routes']}")
+    if features['content_descriptions']:
+        logger.info(f"Content descriptions found: {len(features['content_descriptions'])}")
     
     return features

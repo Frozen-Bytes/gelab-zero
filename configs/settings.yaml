@@ -1,4 +1,19 @@
 # Scenario generation configuration
+# Switch provider to: "gemini", "openai", "openrouter", or "groq"
 scenario_gen:
-  provider: "gemini"
-  model_name: "gemini-2.5-flash"
+  provider: "groq"
+  model_name: "llama-3.3-70b-versatile"
+  # --- Examples ---
+  # Gemini (direct):
+  #   provider: "gemini"
+  #   model_name: "gemini-2.5-flash"
+  # OpenRouter (any model):
+  #   provider: "openrouter"
+  #   model_name: "anthropic/claude-sonnet-4"
+  #   model_name: "google/gemma-4-31b-it:free"
+  #   model_name: "meta-llama/llama-3-70b-instruct"
+  # Groq (ultra-fast inference):
+  #   provider: "groq"
+  #   model_name: "llama-3.3-70b-versatile"
+  #   model_name: "gemma2-9b-it"
+  #   model_name: "mixtral-8x7b-32768"

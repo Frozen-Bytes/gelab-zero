@@ -32,22 +32,28 @@ def summarize_features(features: dict) -> str:
         lines.append(f"Package: {features['package']}")
 
     if features.get("activities"):
-        lines.append(f"Activities: {', '.join(features['activities'][:20])}")
+        lines.append(f"Activities: {', '.join(features['activities'][:100])}")
 
     if features.get("permissions"):
-        lines.append(f"Permissions: {', '.join(features['permissions'][:15])}")
+        lines.append(f"Permissions: {', '.join(features['permissions'][:50])}")
 
     if features.get("intent_actions"):
-        lines.append(f"Intent actions: {', '.join(features['intent_actions'][:10])}")
+        lines.append(f"Intent actions: {', '.join(features['intent_actions'][:50])}")
 
     if features.get("ui_strings"):
-        lines.append(f"UI labels: {', '.join(features['ui_strings'][:30])}")
+        lines.append(f"UI labels: {', '.join(features['ui_strings'][:300])}")
 
     if features.get("classes"):
-        lines.append(f"Key classes: {', '.join(features['classes'][:20])}")
+        lines.append(f"Key classes: {', '.join(features['classes'][:150])}")
 
     if features.get("methods"):
-        lines.append(f"Key methods: {', '.join(features['methods'][:20])}")
+        lines.append(f"Key methods: {', '.join(features['methods'][:150])}")
+
+    if features.get("navigation_routes"):
+        lines.append(f"Navigation routes/screens: {', '.join(features['navigation_routes'])}")
+
+    if features.get("content_descriptions"):
+        lines.append(f"UI element descriptions: {', '.join(features['content_descriptions'][:100])}")
 
     summary = "\n".join(lines)
     logger.debug("Summary generated successfully.")

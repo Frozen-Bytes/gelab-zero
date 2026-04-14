@@ -1,6 +1,8 @@
 import os
 from models.providers.gemini_client import GeminiClient
 from models.providers.openai_client import OpenAIClient
+from models.providers.openrouter_client import OpenRouterClient
+from models.providers.groq_client import GroqClient
 
 from dotenv import load_dotenv
 
@@ -9,6 +11,7 @@ load_dotenv()
 def get_llm_client(llm_config: dict):
     '''
     Returns the instantiated client based on the YAML config.
+    Supported providers: gemini, openai, openrouter, groq
     '''
     provider = llm_config.get('provider').lower()
     model_name = llm_config.get('model_name')
@@ -26,6 +29,20 @@ def get_llm_client(llm_config: dict):
             raise ValueError('OPENAI_API_KEY not found in .env')
         
         return OpenAIClient(api_key=api_key, model_name=model_name)
+
+    elif provider == 'openrouter':
+        api_key = os.getenv('OPENROUTER_API_KEY')
+        if not api_key:
+            raise ValueError('OPENROUTER_API_KEY not found in .env')
+        
+        return OpenRouterClient(api_key=api_key, model_name=model_name)
+
+    elif provider == 'groq':
+        api_key = os.getenv('GROQ_API_KEY')
+        if not api_key:
+            raise ValueError('GROQ_API_KEY not found in .env')
+        
+        return GroqClient(api_key=api_key, model_name=model_name)
            
     else:
         raise ValueError(f'Unsupported LLM provider: {provider}')

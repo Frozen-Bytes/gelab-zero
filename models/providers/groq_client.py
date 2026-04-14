@@ -1,9 +1,14 @@
-from openai import OpenAI
+from groq import Groq
 from models.base_client import BaseLLMClient
 
-class OpenAIClient(BaseLLMClient):
-    def __init__(self, api_key: str, model_name='gpt-3.5-turbo'):
-        self.client = OpenAI(api_key=api_key)
+
+class GroqClient(BaseLLMClient):
+    """
+    LLM client for Groq's ultra-fast inference API.
+    Supports models like llama, gemma, mixtral, etc.
+    """
+    def __init__(self, api_key: str, model_name: str = 'llama-3.3-70b-versatile'):
+        self.client = Groq(api_key=api_key)
         self.model_name = model_name
 
     def generate_action(self, prompt: str, image_path: str) -> str:
@@ -31,11 +36,11 @@ class OpenAIClient(BaseLLMClient):
         )
 
         return response.choices[0].message.content
-    
+
     def generate_text(self, prompt: str) -> str:
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=[{'role': 'user', 'content': prompt}],
-            temperature=0.0  # make higher for creative scenarios
+            temperature=0.0
         )
         return response.choices[0].message.content

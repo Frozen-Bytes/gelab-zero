@@ -12,6 +12,7 @@ class ScenarioGenerator:
     def generate_scenarios(self, app_summary: str, num_goals: int = 3) -> list[str]:
         logger.info(f"Generating {num_goals} scenarios using the generic LLM client...")
         prompt = build_goal_prompt(app_summary, num_goals=num_goals)
+        print(prompt)
 
         try:
             # We use the text-only method
