@@ -18,6 +18,7 @@ Rules:
 - task_name must be CamelCase, concise, and suitable for use as a test file name (e.g. "RecordAudioClip", "ToggleDarkMode")
 - Output ONLY a valid JSON array, nothing else. No explanation, no preamble, no markdown backticks.
 - Don't generate scenarios that might result in exiting the app, like pressing on a link, selecting an article/news source, sharing something, etc.
+- Have at least one goal containing a scrolling action
 
 Output format:
 [
