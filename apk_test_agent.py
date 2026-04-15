@@ -111,7 +111,11 @@ def main() -> int:
             from copilot_agent_client.pu_client import evaluate_task_on_device
             from copilot_front_end.mobile_action_helper import list_devices, get_device_wm_size
             from copilot_agent_server.local_server import LocalServer
-            from utils.apk_utils import ensure_device_connected, install_apk_on_device
+            from utils.apk_utils import (
+                ensure_device_connected,
+                install_apk_on_device,
+                stop_and_optionally_clear_app,
+            )
 
             tmp_server_config = {
                 "log_dir": "running_log/server_log/os-copilot-local-eval-logs/traces",
@@ -172,6 +176,25 @@ def main() -> int:
                 except Exception as e:
                     print(f"Error executing scenario {i} '{task_with_package}': {e}")
                     # Continue to next scenario
+                finally:
+                    # Ensure scenarios don't affect each other:
+                    # - leave the app (Home)
+                    # - force-stop it
+                    # - clear its data (best effort)
+                    if package_name:
+                        stop_and_optionally_clear_app(
+                            device_id,
+                            package_name,
+                            clear_data=True,
+                            go_home=True,
+                        )
+                    else:
+                        # At least ensure we leave the app UI even if package parsing failed.
+                        try:
+                            from utils.apk_utils import run_adb_command
+                            run_adb_command(device_id, ["shell", "input", "keyevent", "3"])
+                        except Exception:
+                            pass
 
             print("\nAll scenarios executed.")
         except Exception as exc:

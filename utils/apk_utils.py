@@ -148,3 +148,44 @@ def reset_app(adb_serial, package_name):
     )
 
     logger.info(f"Reset app: {package_name}")
+
+
+def stop_and_optionally_clear_app(
+    adb_serial: str,
+    package_name: str,
+    *,
+    clear_data: bool = True,
+    go_home: bool = True,
+    timeout: int = 180,
+) -> None:
+    """
+    Best-effort "scenario isolation" cleanup:
+    - Go to Home (optional)
+    - Force-stop the app
+    - Clear app data (optional) to simulate fresh install state
+
+    This intentionally does NOT raise if one step fails; the main objective is
+    to ensure the app is no longer foregrounded for the next scenario.
+    """
+    if not package_name:
+        raise ValueError("package_name is required")
+
+    def _try(args: list[str]) -> None:
+        try:
+            run_adb_command(adb_serial, args, timeout=timeout)
+        except Exception as exc:
+            logger.warning(f"ADB cleanup step failed {args}: {exc}")
+
+    if go_home:
+        _try(["shell", "input", "keyevent", "3"])  # KEYCODE_HOME
+
+    # Kill any running process / background services for the app.
+    _try(["shell", "am", "force-stop", package_name])
+
+    # Clear data to make the app behave like freshly installed.
+    if clear_data:
+        _try(["shell", "pm", "clear", package_name])
+
+    # Some launchers briefly return to the last task; pressing Home again helps.
+    if go_home:
+        _try(["shell", "input", "keyevent", "3"])  # KEYCODE_HOME
